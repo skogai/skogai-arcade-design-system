@@ -1,0 +1,112 @@
+<!doctype html>
+<!-- @dsCard group="Card Arcade" name="Gin Rummy Table" subtitle="Meld fan, stock + discard piles, deadwood HUD" viewport="1440x900" -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Card Arcade — Gin Rummy</title>
+<link rel="stylesheet" href="../styles.css" />
+<script src="cards.js" defer></script>
+</head>
+<body class="sk-table-page">
+<header data-sk-table-header data-mode="gin" data-status="Your turn — draw from the stock or the discard pile." data-score="YOU 027 · AI 014"></header>
+
+<main class="sk-table-main">
+  <section aria-label="North AI" class="sk-pile-col">
+    <div class="sk-seat">
+      <span class="sk-badge sk-badge-muted">▢ WAITING</span>
+      <span class="sk-h4">NORTH AI</span>
+      <span class="sk-seat-count">10 cards</span>
+    </div>
+    <div class="sk-fan sk-fan-ai" data-ai-fan="10"></div>
+  </section>
+
+  <section aria-label="Draw piles" class="sk-felt" style="box-sizing: border-box; width: 100%; max-width: 880px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--sk-space-24) var(--sk-space-48); padding: var(--sk-space-32) var(--sk-space-24);">
+    <div class="sk-pile-col">
+      <button type="button" class="sk-pile" aria-label="Draw from stock, 31 cards left">
+        <div class="sk-playing-card" data-face-down style="left: 4px; top: 10px;"></div>
+        <div class="sk-playing-card" data-face-down style="left: 6px; top: 7px;"></div>
+        <div class="sk-playing-card" data-face-down style="left: 8px; top: 4px;"></div>
+      </button>
+      <span class="sk-label sk-pile-label">STOCK · <span class="sk-mono">31</span></span>
+    </div>
+
+    <div style="display: flex; gap: var(--sk-space-12); flex-wrap: wrap; justify-content: center;">
+      <div class="sk-plaque sk-plaque-green" style="min-width: 104px;">
+        <span class="sk-plaque-label">SETS</span>
+        <span class="sk-plaque-value">01</span>
+      </div>
+      <div class="sk-plaque sk-plaque-cyan" style="min-width: 104px;">
+        <span class="sk-plaque-label">RUNS</span>
+        <span class="sk-plaque-value">02</span>
+      </div>
+      <div class="sk-plaque sk-plaque-yellow" style="min-width: 104px;">
+        <span class="sk-plaque-label">DEADWOOD</span>
+        <span class="sk-plaque-value">001</span>
+      </div>
+    </div>
+
+    <div class="sk-pile-col">
+      <button type="button" class="sk-pile" aria-label="Take the 8 of hearts from the discard pile">
+        <div class="sk-playing-card" data-rank="3" data-suit="spades" style="left: 6px; top: 7px; transform: rotate(-4deg);"></div>
+        <div class="sk-playing-card" data-rank="8" data-suit="hearts" style="left: 8px; top: 6px; transform: rotate(3deg);"></div>
+      </button>
+      <span class="sk-label sk-pile-label">DISCARD · DROP OR TAP</span>
+    </div>
+  </section>
+
+  <section aria-label="Your hand" class="sk-pile-col" style="width: 100%;">
+    <div class="sk-hand-scroll">
+      <div class="sk-fan sk-hand" id="hand"></div>
+    </div>
+    <div class="sk-legend">
+      <span class="sk-badge sk-badge-success">▣ SET</span>
+      <span class="sk-badge sk-badge-cyan">▣ RUN</span>
+      <span class="sk-hint">Drag to reorder · tap a card to discard</span>
+    </div>
+  </section>
+</main>
+
+<footer class="sk-table-footer">
+  <button type="button" class="sk-btn sk-btn-outline" aria-pressed="false" data-sort="rank">SORT RANK</button>
+  <button type="button" class="sk-btn sk-btn-outline" aria-pressed="false" data-sort="suit">SORT SUIT</button>
+  <span class="sk-footer-sep" aria-hidden="true"></span>
+  <a href="scoreboard.html" class="sk-btn sk-btn-primary">▶ KNOCK · <span class="sk-mono">01</span></a>
+  <button type="button" class="sk-btn sk-btn-outline">NEW DEAL</button>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var ORDER = { spades: 4, hearts: 3, clubs: 2, diamonds: 1 };
+  var base = [
+    ['7', 7, 'spades', 'set'], ['7', 7, 'hearts', 'set'], ['7', 7, 'clubs', 'set'],
+    ['4', 4, 'diamonds', 'run'], ['5', 5, 'diamonds', 'run'], ['6', 6, 'diamonds', 'run'],
+    ['9', 9, 'clubs', 'run'], ['10', 10, 'clubs', 'run'], ['J', 11, 'clubs', 'run'],
+    ['A', 1, 'hearts', 'none']
+  ].map(function (c) { return { label: c[0], r: c[1], suit: c[2], glow: c[3] }; });
+  var MELD = { set: ', in a set', run: ', in a run', none: ', deadwood' };
+  var hand = document.getElementById('hand');
+  var sortBtns = document.querySelectorAll('[data-sort]');
+
+  function render(sort) {
+    var cards = base.slice();
+    if (sort === 'rank') cards.sort(function (a, b) { return (a.r - b.r) || (ORDER[b.suit] - ORDER[a.suit]); });
+    if (sort === 'suit') cards.sort(function (a, b) { return (ORDER[b.suit] - ORDER[a.suit]) || (a.r - b.r); });
+    hand.textContent = '';
+    cards.forEach(function (c, i) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sk-hand-card';
+      btn.setAttribute('aria-label', SkCards.cardName(c.label, c.suit) + MELD[c.glow]);
+      SkCards.setFan(btn, SkCards.fan(i, cards.length, 20, 18));
+      btn.appendChild(SkCards.makeCard({ rank: c.label, suit: c.suit, glow: c.glow }));
+      hand.appendChild(btn);
+    });
+    sortBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.sort === sort)); });
+  }
+  sortBtns.forEach(function (b) { b.addEventListener('click', function () { render(b.dataset.sort); }); });
+  render('meld');
+});
+</script>
+</body>
+</html>

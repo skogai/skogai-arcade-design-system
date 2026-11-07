@@ -1,0 +1,112 @@
+<!doctype html>
+<!-- @dsCard group="Card Arcade" name="Hearts Table" subtitle="Four seats, trick pit, playable-suit dimming" viewport="1440x900" -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Card Arcade — Hearts</title>
+<link rel="stylesheet" href="../styles.css" />
+<script src="cards.js" defer></script>
+</head>
+<body class="sk-table-page">
+<header data-sk-table-header data-mode="hearts" data-status="Follow suit — clubs were led." data-score="YOU 004 · N 011"></header>
+
+<main class="sk-table-main">
+  <section aria-label="North AI" style="display: flex; align-items: center; gap: var(--sk-space-24); flex-wrap: wrap; justify-content: center;">
+    <div class="sk-plaque sk-plaque-violet" style="min-width: 152px;">
+      <span class="sk-plaque-label">NORTH AI · 11 CARDS</span>
+      <span class="sk-plaque-value">011</span>
+      <span class="sk-plaque-sub">THIS HAND · 0 ♥</span>
+    </div>
+    <div class="sk-fan sk-fan-ai-tight" data-ai-fan="11"></div>
+  </section>
+
+  <section aria-label="Table" style="width: 100%; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: var(--sk-space-32);">
+    <div class="sk-pile-col">
+      <div class="sk-plaque sk-plaque-violet" style="min-width: 152px;">
+        <span class="sk-plaque-label">WEST AI · 11 CARDS</span>
+        <span class="sk-plaque-value">007</span>
+        <span class="sk-plaque-sub">THIS HAND · 2 ♥</span>
+      </div>
+      <span class="sk-badge sk-badge-cyan">▸ LED THIS TRICK</span>
+    </div>
+
+    <div class="sk-felt-dashed sk-stack" style="box-sizing: border-box; width: 360px; height: 340px;">
+      <div style="top: 12px; left: 12px; right: 12px; display: flex; justify-content: space-between; align-items: center;">
+        <span class="sk-badge sk-badge-muted">▢ HEARTS UNBROKEN</span>
+        <span class="sk-seat-count">trick 02/13</span>
+      </div>
+      <div class="sk-playing-card" data-rank="10" data-suit="clubs" style="left: 44px; top: 110px; transform: rotate(-8deg);"></div>
+      <div class="sk-playing-card" data-rank="K" data-suit="clubs" style="left: 124px; top: 52px; transform: rotate(4deg);"></div>
+      <div class="sk-playing-card" data-rank="3" data-suit="clubs" style="left: 204px; top: 110px; transform: rotate(7deg);"></div>
+      <div style="left: 124px; top: 170px; box-sizing: border-box; width: 112px; height: 158px; border: 2px dashed var(--sk-border-strong); border-radius: var(--sk-radius-panel); display: grid; place-items: center; background: rgba(5,8,16,0.6);">
+        <span class="sk-meta" style="color: var(--sk-fg-2); text-align: center; line-height: 1.6;">YOUR<br />PLAY</span>
+      </div>
+    </div>
+
+    <div class="sk-pile-col">
+      <div class="sk-plaque sk-plaque-violet" style="min-width: 152px;">
+        <span class="sk-plaque-label">EAST AI · 11 CARDS</span>
+        <span class="sk-plaque-value">015</span>
+        <span class="sk-plaque-sub">THIS HAND · 0 ♥</span>
+      </div>
+      <span class="sk-badge sk-badge-muted">▢ PLAYED</span>
+    </div>
+  </section>
+
+  <section aria-label="Your hand" class="sk-pile-col" style="width: 100%;">
+    <div class="sk-hand-scroll">
+      <div class="sk-fan sk-hand sk-hand-tight" id="hand"></div>
+    </div>
+    <div class="sk-legend">
+      <span class="sk-badge sk-badge-primary">▣ SELECTED</span>
+      <span class="sk-hint" style="color: var(--sk-fg-2);">Clubs are playable · other suits are dimmed until you are void</span>
+    </div>
+  </section>
+</main>
+
+<footer class="sk-table-footer">
+  <button type="button" class="sk-btn sk-btn-outline">SORT RANK</button>
+  <button type="button" class="sk-btn sk-btn-outline">SORT SUIT</button>
+  <span class="sk-footer-sep" aria-hidden="true"></span>
+  <button type="button" class="sk-btn sk-btn-primary" id="play">▶ PLAY</button>
+  <button type="button" class="sk-btn sk-btn-outline">NEW HAND</button>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var base = [
+    ['2', 'spades'], ['9', 'spades'], ['Q', 'spades'],
+    ['5', 'hearts'], ['J', 'hearts'], ['A', 'hearts'],
+    ['4', 'clubs'], ['8', 'clubs'], ['Q', 'clubs'],
+    ['3', 'diamonds'], ['6', 'diamonds'], ['K', 'diamonds']
+  ];
+  var LED = 'clubs';
+  var hand = document.getElementById('hand');
+  var play = document.getElementById('play');
+  var picked = 'clubs-8';
+
+  function render() {
+    hand.textContent = '';
+    base.forEach(function (c, i) {
+      var label = c[0], suit = c[1], id = suit + '-' + label;
+      var playable = suit === LED, isPicked = id === picked;
+      var f = SkCards.fan(i, base.length, 22, 18);
+      if (isPicked) f.dy -= 18;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'sk-hand-card is-pickable';
+      btn.setAttribute('aria-pressed', String(isPicked));
+      btn.setAttribute('aria-label', SkCards.cardName(label, suit) + (playable ? '' : ', not playable'));
+      SkCards.setFan(btn, f);
+      btn.appendChild(SkCards.makeCard({ rank: label, suit: suit, glow: isPicked ? 'pass' : (playable ? 'none' : 'dim') }));
+      btn.addEventListener('click', function () { if (playable) { picked = id; render(); } });
+      hand.appendChild(btn);
+      if (isPicked) play.textContent = '▶ PLAY ' + label + SkCards.SUITS[suit].glyph;
+    });
+  }
+  render();
+});
+</script>
+</body>
+</html>
