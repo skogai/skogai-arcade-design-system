@@ -1,0 +1,29 @@
+{
+  "name": "@skogai/arcade-react",
+  "version": "0.1.0",
+  "description": "Skogai Arcade React components: buttons, plaques, quest strip, HUD frame, terminal kit — all cabinet-aware.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/arcade.css"
+  },
+  "files": ["dist"],
+  "sideEffects": ["*.css"],
+  "scripts": {
+    "gen:icons": "node scripts/gen-icons.mjs",
+    "build": "tsup src/index.ts --format esm --dts --clean --external react --external @skogai/arcade-tokens && node scripts/copy-css.mjs"
+  },
+  "dependencies": {
+    "@skogai/arcade-css": "0.1.0",
+    "@skogai/arcade-tokens": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "license": "UNLICENSED"
+}

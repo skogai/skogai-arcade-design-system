@@ -1,0 +1,64 @@
+/* ==========================================================================
+   Skogai Arcade — base + type utilities
+   Loads after tokens.css.
+   ========================================================================== */
+
+body {
+  background: var(--sk-bg);
+  color: var(--sk-fg);
+  font-family: var(--sk-font-body);
+  font-size: var(--sk-text-18);
+  line-height: var(--sk-leading-normal);
+  -webkit-font-smoothing: none; /* keep pixel crispness */
+  font-smooth: never;
+  image-rendering: pixelated;
+}
+
+/* App root / any cabinet-scoped surface that should paint its own canvas. */
+.sk-app {
+  background: var(--sk-bg);
+  color: var(--sk-fg);
+  font-family: var(--sk-font-body);
+  font-size: var(--sk-text-18);
+  line-height: var(--sk-leading-normal);
+  -webkit-font-smoothing: none;
+}
+
+.sk-display     { font-family: var(--sk-font-display); line-height: var(--sk-leading-tight); letter-spacing: 0; }
+.sk-ui          { font-family: var(--sk-font-ui); }
+.sk-body        { font-family: var(--sk-font-body); }
+.sk-mono        { font-family: var(--sk-font-mono); }
+.sk-term        { font-family: var(--sk-font-terminal); font-feature-settings: "liga" 0, "calt" 0; }
+.sk-pixel-mono  { font-family: var(--sk-font-pixel-mono); }
+
+/* Headline roles */
+.sk-h1 { font-family: var(--sk-font-display); font-size: var(--sk-text-48); line-height: 1.1; }
+.sk-h2 { font-family: var(--sk-font-display); font-size: var(--sk-text-32); line-height: 1.15; }
+.sk-h3 { font-family: var(--sk-font-display); font-size: var(--sk-text-20); line-height: 1.2; }
+.sk-h4 { font-family: var(--sk-font-ui);      font-size: var(--sk-text-16); line-height: 1.2; }
+
+/* Body / chrome roles */
+.sk-body-lg  { font-family: var(--sk-font-body); font-size: var(--sk-text-24); }
+.sk-body-md  { font-family: var(--sk-font-body); font-size: var(--sk-text-20); }
+.sk-body-sm  { font-family: var(--sk-font-body); font-size: var(--sk-text-18); }
+.sk-label    { font-family: var(--sk-font-ui);   font-size: var(--sk-text-12); }
+.sk-meta     { font-family: var(--sk-font-ui);   font-size: var(--sk-text-10); color: var(--sk-fg-muted); }
+.sk-terminal { font-family: var(--sk-font-terminal); font-size: var(--sk-text-16); color: var(--sk-neon-green); text-shadow: var(--sk-glow-green); font-feature-settings: "liga" 0, "calt" 0; }
+
+/* Neon text helpers — interactive / marquee only, never body copy. */
+.sk-glow-primary { color: var(--sk-primary);      text-shadow: var(--sk-primary-glow); }
+.sk-glow-accent  { color: var(--sk-accent);       text-shadow: var(--sk-accent-glow); }
+.sk-glow-magenta { color: var(--sk-neon-magenta); text-shadow: var(--sk-glow-magenta); }
+.sk-glow-pink    { color: var(--sk-neon-pink);    text-shadow: var(--sk-glow-pink); }
+.sk-glow-violet  { color: var(--sk-neon-violet);  text-shadow: var(--sk-glow-violet); }
+.sk-glow-cyan    { color: var(--sk-neon-cyan);    text-shadow: var(--sk-glow-cyan); }
+.sk-glow-green   { color: var(--sk-neon-green);   text-shadow: var(--sk-glow-green); }
+.sk-glow-acid    { color: var(--sk-neon-acid);    text-shadow: var(--sk-glow-acid); }
+.sk-glow-yellow  { color: var(--sk-neon-yellow);  text-shadow: var(--sk-glow-yellow); }
+.sk-glow-red     { color: var(--sk-neon-red);     text-shadow: var(--sk-glow-red); }
+
+/* Visually hidden, still announced by screen readers. */
+.sk-sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}

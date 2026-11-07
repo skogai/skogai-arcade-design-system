@@ -1,0 +1,23 @@
+{
+  "name": "@skogai/arcade-tokens",
+  "version": "0.1.0",
+  "description": "Skogai Arcade design tokens: palette, cabinets, type, spacing. Ships CSS variables, JSON, a Tailwind v4 theme and typed JS.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tokens.css": "./dist/tokens.css",
+    "./tailwind.css": "./dist/tailwind.css",
+    "./tokens.json": "./dist/tokens.json"
+  },
+  "files": ["dist"],
+  "sideEffects": ["*.css"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts --clean && tsx scripts/build.ts"
+  },
+  "license": "UNLICENSED"
+}
