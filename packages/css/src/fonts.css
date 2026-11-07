@@ -1,0 +1,29 @@
+/* ==========================================================================
+   Skogai Arcade — brand font faces (self-hosted, shipped in ./fonts)
+   ========================================================================== */
+
+/* BigBlueTerm 437 — IBM PC BIOS bitmap + Nerd Font icon glyphs.
+   Authoritative terminal face. Use via --sk-font-terminal. */
+@font-face {
+  font-family: "BigBlueTerm";
+  src: url("./fonts/BigBlueTerm437NerdFontMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* BigBlueTerm Plus — extended Nerd Font set. Falls through to 437 if absent. */
+@font-face {
+  font-family: "BigBlueTermPlus";
+  src: url("./fonts/BigBlueTermPlusNerdFontMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+/* Departure Mono — modern pixel display alternate. */
+@font-face {
+  font-family: "DepartureMono";
+  src: url("./fonts/DepartureMonoNerdFontMono-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

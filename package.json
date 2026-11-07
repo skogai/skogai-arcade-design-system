@@ -1,0 +1,35 @@
+{
+  "name": "skogai-arcade",
+  "private": true,
+  "description": "Skogai Arcade design system: tokens, CSS framework and React components.",
+  "type": "module",
+  "workspaces": [
+    "packages/tokens",
+    "packages/css",
+    "packages/react",
+    "examples/gallery"
+  ],
+  "scripts": {
+    "build": "npm run build -w @skogai/arcade-tokens && npm run build -w @skogai/arcade-css && npm run build -w @skogai/arcade-react",
+    "test": "vitest run",
+    "typecheck": "tsc -p packages/tokens && tsc -p packages/react --noEmit",
+    "gallery": "npm run build && npm run dev -w @skogai/arcade-gallery",
+    "check": "npm run build && npm run typecheck && npm test"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.0.1",
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "jsdom": "^25.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

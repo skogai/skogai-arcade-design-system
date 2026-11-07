@@ -1,0 +1,28 @@
+{
+  "name": "@skogai/arcade-css",
+  "version": "0.1.0",
+  "description": "Skogai Arcade CSS framework: tokens, base type, components, HUD frame and terminal kit. Framework-agnostic.",
+  "type": "module",
+  "exports": {
+    ".": "./dist/arcade.css",
+    "./arcade.css": "./dist/arcade.css",
+    "./arcade.local.css": "./dist/arcade.local.css",
+    "./tokens.css": "./dist/tokens.css",
+    "./google-fonts.css": "./dist/google-fonts.css",
+    "./fonts.css": "./dist/fonts.css",
+    "./base.css": "./dist/base.css",
+    "./components.css": "./dist/components.css",
+    "./terminal.css": "./dist/terminal.css",
+    "./icons.svg": "./dist/icons.svg",
+    "./fonts/*": "./dist/fonts/*"
+  },
+  "files": ["dist"],
+  "sideEffects": ["*.css"],
+  "scripts": {
+    "build": "node scripts/build.mjs"
+  },
+  "dependencies": {
+    "@skogai/arcade-tokens": "0.1.0"
+  },
+  "license": "UNLICENSED"
+}

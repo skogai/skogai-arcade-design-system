@@ -1,0 +1,379 @@
+/* ==========================================================================
+   Skogai Arcade — Components
+   Reusable primitives. Loads after tokens.css + base.css. Class prefix: .sk-
+   Every color comes from a token, so data-cabinet="…" retints the lot.
+   ========================================================================== */
+
+/* =========================================================================
+   BUTTONS
+   2px radius. Pixel-square, glow on solid neon fills, no rounded blobs.
+   ========================================================================= */
+.sk-btn {
+  font-family: var(--sk-font-ui);
+  font-size: var(--sk-text-12);
+  letter-spacing: 0.02em;
+  padding: 10px 18px;
+  border: 1px solid var(--sk-border);
+  background: var(--sk-card);
+  color: var(--sk-fg);
+  border-radius: var(--sk-radius-control);
+  cursor: pointer;
+  transition: transform 0.06s, box-shadow 0.12s, background 0.12s;
+  user-select: none;
+  display: inline-flex; align-items: center; gap: var(--sk-space-8);
+  text-decoration: none;
+}
+.sk-btn:hover  { background: var(--sk-card-2); }
+.sk-btn:active { transform: translateY(1px); }
+.sk-btn:focus-visible {
+  outline: 2px solid var(--sk-ring);
+  outline-offset: 2px;
+}
+
+.sk-btn-primary {
+  background: var(--sk-primary);
+  color: var(--sk-primary-fg);
+  border-color: var(--sk-primary-border);
+  box-shadow: var(--sk-primary-glow);
+}
+.sk-btn-primary:hover { background: var(--sk-primary-hover); }
+
+.sk-btn-secondary {
+  background: var(--sk-accent);
+  color: var(--sk-accent-fg);
+  border-color: var(--sk-accent-border);
+  box-shadow: var(--sk-accent-glow);
+}
+.sk-btn-secondary:hover { background: var(--sk-accent-hover); }
+
+.sk-btn-success {
+  background: var(--sk-success);
+  color: var(--sk-fg-on-neon);
+  border-color: var(--sk-neon-green-border);
+  box-shadow: var(--sk-glow-green);
+}
+.sk-btn-success:hover { background: var(--sk-neon-green-hover); }
+
+.sk-btn-danger {
+  background: transparent;
+  color: var(--sk-danger);
+  border-color: var(--sk-danger);
+}
+.sk-btn-danger:hover { background: color-mix(in srgb, var(--sk-danger) 12%, transparent); }
+
+.sk-btn-outline {
+  background: transparent;
+  color: var(--sk-fg);
+  border-color: var(--sk-border-strong);
+}
+.sk-btn-ghost {
+  background: transparent;
+  color: var(--sk-fg-2);
+  border-color: transparent;
+}
+.sk-btn-ghost:hover { background: var(--sk-card); color: var(--sk-fg); }
+
+.sk-btn-sm { font-size: var(--sk-text-10); padding: 6px 12px; gap: var(--sk-space-6); }
+.sk-btn-lg { font-size: var(--sk-text-14); padding: 14px 24px; }
+.sk-btn-block { display: flex; width: 100%; justify-content: center; }
+
+/* Disabled wins over every variant, including hover and active. */
+.sk-btn:disabled,
+.sk-btn[aria-disabled="true"],
+.sk-btn:disabled:hover,
+.sk-btn[aria-disabled="true"]:hover {
+  color: var(--sk-fg-dim);
+  background: var(--sk-bg-2);
+  border-color: var(--sk-border-soft);
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================================================================
+   BADGES / STATUS PILLS
+   ========================================================================= */
+.sk-badge {
+  display: inline-flex; align-items: center; gap: var(--sk-space-6);
+  font-family: var(--sk-font-ui); font-size: var(--sk-text-10);
+  padding: var(--sk-space-4) var(--sk-space-8);
+  border-radius: var(--sk-radius-control);
+  border: 1px solid currentColor;
+  background: rgba(0, 0, 0, 0.25);
+}
+.sk-badge-primary { color: var(--sk-primary); }
+.sk-badge-accent  { color: var(--sk-accent); }
+.sk-badge-cyan    { color: var(--sk-neon-cyan); }
+.sk-badge-success { color: var(--sk-success); }
+.sk-badge-warning { color: var(--sk-warning); }
+.sk-badge-danger  { color: var(--sk-danger); }
+.sk-badge-muted   { color: var(--sk-fg-muted); }
+
+/* =========================================================================
+   PLAQUES (HUD readouts)
+   Inset CRT bevel; label above, value below.
+   ========================================================================= */
+.sk-plaque {
+  background: var(--sk-void);
+  border-radius: var(--sk-radius-panel);
+  padding: 14px var(--sk-space-16);
+  display: flex; flex-direction: column; gap: var(--sk-space-4);
+}
+.sk-plaque-label {
+  font-family: var(--sk-font-ui); font-size: var(--sk-text-10);
+  color: var(--sk-fg-muted);
+}
+.sk-plaque-value {
+  font-family: var(--sk-font-display); font-size: 22px;
+  line-height: 1.1;
+}
+.sk-plaque-primary { box-shadow: var(--sk-inset-primary); }
+.sk-plaque-primary .sk-plaque-value { color: var(--sk-primary); text-shadow: var(--sk-primary-glow); }
+.sk-plaque-violet  { box-shadow: var(--sk-inset-violet); }
+.sk-plaque-violet  .sk-plaque-value { color: var(--sk-neon-violet); text-shadow: var(--sk-glow-violet); }
+.sk-plaque-cyan    { box-shadow: var(--sk-inset-cyan); }
+.sk-plaque-cyan    .sk-plaque-value { color: var(--sk-neon-cyan);   text-shadow: var(--sk-glow-cyan); }
+.sk-plaque-green   { box-shadow: var(--sk-inset-green); }
+.sk-plaque-green   .sk-plaque-value { color: var(--sk-neon-green);  text-shadow: var(--sk-glow-green); }
+
+/* =========================================================================
+   QUEST STRIP
+   The signature module: icon · title · progress · status. 2–4 quests.
+   ========================================================================= */
+.sk-quest-strip {
+  display: grid;
+  grid-template-columns: repeat(var(--sk-quest-cols, 3), minmax(0, 1fr));
+  gap: 10px;
+  background: var(--sk-bg-2);
+  border: 1px solid var(--sk-border);
+  border-radius: var(--sk-radius-panel);
+  padding: 10px;
+  list-style: none;
+  margin: 0;
+}
+@media (max-width: 720px) {
+  .sk-quest-strip { grid-template-columns: minmax(0, 1fr); }
+}
+.sk-quest {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: var(--sk-space-12);
+  align-items: center;
+  padding: var(--sk-space-12);
+  background: var(--sk-card);
+  border-radius: var(--sk-radius-panel);
+  border: 1px solid var(--sk-border-soft);
+}
+.sk-quest-icon {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  font-family: var(--sk-font-display); font-size: var(--sk-text-18);
+  background: var(--sk-void);
+  border-radius: var(--sk-radius-control);
+  box-shadow: var(--sk-inset-violet);
+  color: var(--sk-fg);
+}
+.sk-quest-title { font-family: var(--sk-font-ui); font-size: var(--sk-text-12); color: var(--sk-fg); margin-bottom: var(--sk-space-4); }
+.sk-quest-meta  { font-family: var(--sk-font-ui); font-size: var(--sk-text-10); color: var(--sk-fg-muted); }
+.sk-quest-progress {
+  height: 6px; background: var(--sk-void);
+  border-radius: 1px; margin: var(--sk-space-6) 0;
+  border: 1px solid var(--sk-border-soft);
+  overflow: hidden;
+}
+.sk-quest-progress > div {
+  height: 100%;
+  background: var(--sk-primary);
+  box-shadow: var(--sk-primary-glow);
+}
+.sk-quest-done   .sk-quest-icon  { color: var(--sk-success); box-shadow: var(--sk-inset-green); }
+.sk-quest-done   .sk-quest-title { color: var(--sk-success); text-shadow: var(--sk-glow-green); }
+.sk-quest-active .sk-quest-icon  { color: var(--sk-primary); box-shadow: var(--sk-inset-primary); }
+.sk-quest-locked { opacity: 0.55; }
+.sk-quest-locked .sk-quest-icon  { color: var(--sk-fg-muted); box-shadow: inset 0 0 0 2px var(--sk-border-soft); }
+
+/* =========================================================================
+   CARDS
+   ========================================================================= */
+.sk-card {
+  background: var(--sk-card);
+  border-radius: var(--sk-radius-panel);
+  padding: 20px;
+  display: flex; flex-direction: column; gap: var(--sk-space-12);
+}
+.sk-card-default { border: 1px solid var(--sk-border-soft); }
+.sk-card-raised  { border: 1px solid var(--sk-border-strong); box-shadow: var(--sk-shadow-card); }
+.sk-card-eyebrow {
+  font-family: var(--sk-font-ui); font-size: var(--sk-text-10);
+  color: var(--sk-primary); text-shadow: var(--sk-primary-glow);
+}
+.sk-card-title {
+  font-family: var(--sk-font-display); font-size: var(--sk-text-16);
+  color: var(--sk-fg); margin: 0; line-height: 1.3;
+}
+.sk-card-body {
+  font-family: var(--sk-font-body); font-size: var(--sk-text-18);
+  color: var(--sk-fg-2); margin: 0; line-height: 1.4;
+}
+.sk-card-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: var(--sk-space-4);
+}
+
+/* =========================================================================
+   INPUTS
+   ========================================================================= */
+.sk-field {
+  display: flex; flex-direction: column; gap: var(--sk-space-6);
+  min-width: 240px;
+}
+.sk-field-label {
+  font-family: var(--sk-font-ui); font-size: var(--sk-text-10);
+  color: var(--sk-fg-muted);
+}
+.sk-field-help {
+  font-family: var(--sk-font-body); font-size: var(--sk-text-14);
+  color: var(--sk-fg-muted);
+}
+.sk-field-error { color: var(--sk-danger); }
+.sk-input {
+  font-family: var(--sk-font-body); font-size: var(--sk-text-18);
+  background: var(--sk-void);
+  color: var(--sk-fg);
+  border: 1px solid var(--sk-border);
+  border-radius: var(--sk-radius-control);
+  padding: var(--sk-space-8) 10px;
+  outline: none;
+}
+.sk-input::placeholder { color: var(--sk-fg-dim); }
+.sk-input:focus {
+  border-color: var(--sk-ring);
+  box-shadow: 0 0 0 2px var(--sk-ring-soft);
+}
+.sk-input[aria-invalid="true"] { border-color: var(--sk-danger); }
+.sk-input:disabled { color: var(--sk-fg-dim); border-color: var(--sk-border-soft); cursor: not-allowed; }
+
+/* =========================================================================
+   HUD FRAME
+   The poster chrome: status header · stage · footer strip. Double-stroke
+   bracket frames, hearts, segment meters, mascot dialogue plaque.
+   Scope with data-cabinet on .sk-hud (or any ancestor) to retint.
+   ========================================================================= */
+.sk-hud {
+  background: var(--sk-bg);
+  border: 2px solid var(--sk-border-strong);
+  border-radius: var(--sk-radius-panel);
+  padding: var(--sk-space-8);
+  display: flex; flex-direction: column; gap: var(--sk-space-8);
+}
+/* Double-stroke bracket box — the defining frame gesture */
+.sk-frame {
+  border: 2px solid var(--sk-primary);
+  border-radius: var(--sk-radius-control);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.9), inset 0 0 0 3px rgba(0, 0, 0, 0.5), 0 0 8px -2px var(--sk-primary);
+  background: rgba(2, 6, 12, 0.72);
+}
+.sk-hud-bar {
+  display: flex; align-items: stretch; gap: var(--sk-space-8);
+  padding: var(--sk-space-8);
+}
+.sk-hud-brand {
+  font-family: var(--sk-font-display); font-size: var(--sk-text-16);
+  line-height: 1.25; color: var(--sk-primary);
+  text-shadow: var(--sk-cabinet-glow);
+  padding-right: var(--sk-space-12);
+  border-right: 2px solid var(--sk-border);
+  display: flex; flex-direction: column; justify-content: center; gap: var(--sk-space-4);
+  white-space: nowrap;
+}
+.sk-hud-brand small {
+  display: block; font-family: var(--sk-font-ui); font-size: var(--sk-text-10);
+  color: var(--sk-fg-muted); text-shadow: none; letter-spacing: 0.08em;
+}
+.sk-hud-avatar {
+  width: 56px; height: 56px; flex: none;
+  background: var(--sk-void); border-radius: var(--sk-radius-control);
+  box-shadow: inset 0 0 0 2px var(--sk-primary);
+  display: grid; place-items: center;
+  font-family: var(--sk-font-display); font-size: var(--sk-text-18);
+  color: var(--sk-primary);
+}
+.sk-hud-stats { display: flex; flex: 1; gap: var(--sk-space-8); flex-wrap: wrap; align-items: center; }
+.sk-stat { display: grid; grid-template-columns: auto 1fr auto; gap: var(--sk-space-8); align-items: center; }
+.sk-stat-label { font-family: var(--sk-font-ui); font-size: var(--sk-text-10); color: var(--sk-fg-2); letter-spacing: 0.06em; }
+.sk-stat-value { font-family: var(--sk-font-ui); font-size: var(--sk-text-12); color: var(--sk-fg); }
+
+/* Hearts — pixel HP row */
+.sk-hearts { display: flex; gap: 3px; }
+.sk-hearts i { width: 12px; height: 11px; display: block; background: var(--sk-neon-red); clip-path: polygon(20% 0, 40% 0, 50% 20%, 60% 0, 80% 0, 100% 25%, 100% 50%, 50% 100%, 0 50%, 0 25%); }
+.sk-hearts i.empty { background: var(--sk-border-soft); }
+
+/* Segment meter — blocky, not a smooth bar */
+.sk-meter { display: flex; gap: var(--sk-space-2); padding: var(--sk-space-2); background: var(--sk-void); box-shadow: inset 0 0 0 1px var(--sk-border-soft); }
+.sk-meter i { width: 8px; height: 12px; display: block; background: var(--sk-primary); box-shadow: 0 0 5px -1px var(--sk-primary); }
+.sk-meter i.empty { background: var(--sk-border-soft); box-shadow: none; }
+
+/* Stage — deterministic box; art is cropped to the frame, never sizes it. */
+.sk-hud-stage { position: relative; height: 260px; overflow: hidden; border-radius: var(--sk-radius-control); background: var(--sk-bg-2); }
+.sk-hud-stage > img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 62%; image-rendering: pixelated; }
+.sk-hud-stage-tall  { height: 420px; }
+.sk-hud-stage-short { height: 170px; }
+
+/* Announce banner — the one dominant headline */
+.sk-announce { padding: var(--sk-space-16) var(--sk-space-24); text-align: center; display: flex; flex-direction: column; gap: var(--sk-space-8); }
+.sk-announce-title {
+  font-family: var(--sk-font-display); font-size: var(--sk-text-32); line-height: 1.1;
+  margin: 0; color: var(--sk-fg); text-shadow: var(--sk-cabinet-glow);
+}
+.sk-announce-sub { font-family: var(--sk-font-ui); font-size: var(--sk-text-12); color: var(--sk-fg-2); margin: 0; letter-spacing: 0.04em; line-height: 1.6; }
+
+/* Mascot dialogue plaque */
+.sk-dialogue { display: grid; grid-template-columns: 72px 1fr; gap: var(--sk-space-12); padding: var(--sk-space-12); align-items: start; }
+.sk-dialogue-portrait { width: 72px; height: 72px; background: var(--sk-void); border-radius: var(--sk-radius-control); box-shadow: inset 0 0 0 2px var(--sk-primary); display: grid; place-items: center; font-family: var(--sk-font-display); font-size: var(--sk-text-24); color: var(--sk-primary); }
+.sk-dialogue-name { font-family: var(--sk-font-ui); font-size: var(--sk-text-12); color: var(--sk-primary); text-shadow: var(--sk-cabinet-glow); margin-bottom: var(--sk-space-6); letter-spacing: 0.06em; }
+.sk-dialogue-text { font-family: var(--sk-font-body); font-size: var(--sk-text-20); color: var(--sk-fg); margin: 0; line-height: 1.35; }
+
+/* Footer strip — quest / rank row */
+.sk-hud-foot { display: flex; gap: var(--sk-space-8); align-items: stretch; flex-wrap: wrap; }
+.sk-hud-foot > .sk-frame { padding: var(--sk-space-8) var(--sk-space-12); display: flex; align-items: center; gap: var(--sk-space-8); font-family: var(--sk-font-ui); font-size: var(--sk-text-12); color: var(--sk-fg-2); }
+.sk-hud-foot > .sk-frame.grow { flex: 1; }
+.sk-hud-foot .done { color: var(--sk-success); text-shadow: var(--sk-glow-green); }
+
+@media (max-width: 720px) {
+  .sk-hud-bar { flex-wrap: wrap; }
+  .sk-hud-brand { border-right: 0; padding-right: 0; white-space: normal; }
+  .sk-announce-title { font-size: var(--sk-text-20); }
+  .sk-hud-foot > .sk-frame.grow { flex: 1 1 100%; order: -1; }
+}
+
+/* =========================================================================
+   ICONS — pixel glyphs; fill inherits currentColor. Sizes snap to 16/24/32/40.
+   ========================================================================= */
+.sk-icon { width: 24px; height: 24px; display: block; fill: currentColor; image-rendering: pixelated; shape-rendering: crispEdges; flex: none; }
+.sk-icon-16 { width: 16px; height: 16px; }
+.sk-icon-32 { width: 32px; height: 32px; }
+.sk-icon-40 { width: 40px; height: 40px; }
+
+/* =========================================================================
+   TERMINAL BLOCK
+   ========================================================================= */
+.sk-terminal-block {
+  margin: 0;
+  background: var(--sk-term-bg);
+  border: 1px solid var(--sk-term-border);
+  border-radius: var(--sk-radius-panel);
+  padding: var(--sk-space-16) 18px;
+  font-family: var(--sk-font-terminal);
+  font-feature-settings: "liga" 0, "calt" 0;
+  font-size: var(--sk-text-16);
+  line-height: 1.3;
+  color: var(--sk-neon-green);
+  text-shadow: var(--sk-glow-green);
+  white-space: pre;
+  overflow-x: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sk-btn { transition: none; }
+  .sk-btn:active { transform: none; }
+}
