@@ -17,6 +17,8 @@ Use semantic CSS variables (`--sk-primary`, `--sk-fg`, `--sk-card`) before raw p
 |---|---|
 | `colors_and_type.css` | Tokens: palette, semantic roles, type scale, spacing, radius, shadows, glow utilities. |
 | `components.css`      | Buttons, badges, plaques, quest strip, cards, inputs, terminal block. |
+| `cards.css`           | Playing cards, hand fans, piles, card-table chrome and dialogs. |
+| `card-arcade/`        | Card Arcade tables (Gin Rummy, Hearts, Sandbox, round result, rules) + `cards.js` runtime. |
 | `DESIGN.md`           | Source brief — atmosphere, layout principles, do's & don'ts. |
 | `preview/*.html`      | Design-system reference cards (Colors, Type, Spacing, Components, Brand). |
 | `assets/`             | Reference scenes for the three cabinets. |
@@ -117,6 +119,8 @@ See `preview/components.html` for live examples. Class prefix: `.sk-`.
 - **Cards** — `.sk-card.sk-card-{default,raised}` with `.sk-card-eyebrow`, `-title`, `-body`, `-footer`
 - **Inputs** — `.sk-field` wrapping `.sk-input` + `.sk-field-label` + `.sk-field-help`
 - **Terminal** — `.sk-terminal-block` (CRT green on near-black)
+- **Playing cards** — `.sk-playing-card[data-rank][data-suit]` (+ `.sk-playing-card-sm`, `data-face-down`, `data-glow="set|run|pass|dim"`), filled by `card-arcade/cards.js`
+- **Card table** — `.sk-table-page`, `.sk-table-header`, `.sk-fan` / `.sk-hand`, `.sk-pile`, `.sk-table-footer`, `.sk-dialog` (see `card-arcade/`)
 
 ---
 

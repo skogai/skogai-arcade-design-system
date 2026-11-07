@@ -1,0 +1,115 @@
+<!doctype html>
+<!-- @dsCard group="Card Arcade" name="Sandbox Table" subtitle="Free table: card arc, deck, hand dock, flip" viewport="1440x900" -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Card Arcade — Sandbox</title>
+<link rel="stylesheet" href="../styles.css" />
+<script src="cards.js" defer></script>
+<style>
+.sk-free-card { position: absolute; padding: 0; border: 0; background: transparent; cursor: grab; transition: translate 0.18s ease; }
+.sk-free-card:hover, .sk-free-card:focus-visible { translate: 0 -10px; }
+.sk-free-card:focus-visible { outline: 2px solid var(--sk-ring); outline-offset: 4px; }
+</style>
+</head>
+<body class="sk-table-page">
+<header data-sk-table-header data-mode="sandbox" data-status="Free table — drag anything, double-click to flip." data-score="52 CARDS"></header>
+
+<main class="sk-table-main" style="align-items: stretch;">
+  <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--sk-space-12);">
+    <div style="display: flex; flex-direction: column; gap: var(--sk-space-8);">
+      <span class="sk-card-eyebrow">▸ FREE PLAY</span>
+      <h1 class="sk-h3" style="margin: 0;">SANDBOX TABLE</h1>
+    </div>
+    <p class="sk-dialog-lede" style="max-width: 520px;">Drag any card anywhere. Double-click a card, or press F while hovering, to flip it. Drop a card on the dock to add it to your hand.</p>
+  </div>
+
+  <div class="sk-hand-scroll">
+    <section aria-label="Free table" id="table" class="sk-felt" style="position: relative; box-sizing: border-box; min-width: 1000px; height: 420px; overflow: hidden;">
+      <div class="sk-stack" style="left: 32px; bottom: 32px; position: absolute;">
+        <div class="sk-playing-card" data-face-down style="left: 0; top: 10px;"></div>
+        <div class="sk-playing-card" data-face-down style="left: 3px; top: 6px;"></div>
+        <div class="sk-playing-card" data-face-down style="left: 6px; top: 2px;"></div>
+      </div>
+      <span class="sk-label sk-pile-label" style="position: absolute; left: 32px; bottom: 8px;">DECK · <span class="sk-mono">34</span></span>
+      <div class="sk-playing-card" data-rank="K" data-suit="hearts" style="position: absolute; right: 64px; bottom: 36px; transform: rotate(-6deg);"></div>
+      <div class="sk-playing-card" data-face-down style="position: absolute; right: 150px; bottom: 60px; transform: rotate(9deg);"></div>
+    </section>
+  </div>
+
+  <section aria-label="Hand dock" class="sk-pile-col">
+    <div class="sk-fan" id="dock" style="box-sizing: border-box; width: 100%; max-width: 720px; justify-content: center; padding: 20px var(--sk-space-24) var(--sk-space-16) 84px; border: 2px dashed var(--sk-border); border-radius: var(--sk-radius-panel);"></div>
+    <span class="sk-label sk-pile-label">HAND DOCK · <span class="sk-mono">5</span></span>
+  </section>
+</main>
+
+<footer class="sk-table-footer">
+  <button type="button" class="sk-btn sk-btn-outline">SORT RANK</button>
+  <button type="button" class="sk-btn sk-btn-outline">SORT SUIT</button>
+  <span class="sk-footer-sep" aria-hidden="true"></span>
+  <button type="button" class="sk-btn sk-btn-outline">GATHER</button>
+  <button type="button" class="sk-btn sk-btn-outline">SHUFFLE ARC</button>
+  <button type="button" class="sk-btn sk-btn-primary">▶ DEAL 5</button>
+  <button type="button" class="sk-btn sk-btn-outline" id="flip-all">FLIP ALL</button>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var arcCards = [
+    ['A', 'spades'], ['3', 'hearts'], ['9', 'clubs'], ['Q', 'diamonds'], ['5', 'spades'],
+    ['J', 'hearts'], ['2', 'clubs'], ['10', 'diamonds'], ['7', 'spades'], ['4', 'hearts'],
+    ['K', 'clubs'], ['6', 'diamonds'], ['8', 'hearts']
+  ];
+  var down = { 3: true, 9: true };
+  var table = document.getElementById('table');
+  var arcEls = [];
+  var hovered = null;
+
+  function paint(i) {
+    var btn = arcEls[i], c = arcCards[i], isDown = !!down[i];
+    btn.textContent = '';
+    btn.appendChild(SkCards.makeCard({ rank: c[0], suit: c[1], faceDown: isDown }));
+    btn.setAttribute('aria-label', isDown ? 'Face-down card, double-click to flip' : SkCards.cardName(c[0], c[1]));
+  }
+  function flip(i) { down[i] = !down[i]; paint(i); }
+
+  var n = arcCards.length;
+  arcCards.forEach(function (c, i) {
+    var t = i / (n - 1);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'sk-free-card';
+    btn.style.left = (6 + t * 80).toFixed(2) + '%';
+    btn.style.top = Math.round(28 + Math.pow(t - 0.5, 2) * 220) + 'px';
+    btn.style.transform = 'rotate(' + ((t - 0.5) * 44).toFixed(2) + 'deg)';
+    btn.addEventListener('dblclick', function () { flip(i); });
+    btn.addEventListener('mouseenter', function () { hovered = i; });
+    btn.addEventListener('mouseleave', function () { if (hovered === i) hovered = null; });
+    btn.addEventListener('keydown', function (e) { if (e.key === 'f' || e.key === 'F') flip(i); });
+    arcEls.push(btn);
+    table.appendChild(btn);
+    paint(i);
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'f' || e.key === 'F') && hovered !== null && !arcEls.includes(e.target)) flip(hovered);
+  });
+
+  document.getElementById('flip-all').addEventListener('click', function () {
+    var anyDown = arcCards.some(function (_, i) { return down[i]; });
+    down = {};
+    if (!anyDown) arcCards.forEach(function (_, i) { down[i] = true; });
+    arcCards.forEach(function (_, i) { paint(i); });
+  });
+
+  var dock = document.getElementById('dock');
+  [['A', 'hearts'], ['K', 'hearts'], ['Q', 'hearts'], ['J', 'hearts'], ['10', 'hearts']].forEach(function (c, i, all) {
+    var el = SkCards.makeCard({ rank: c[0], suit: c[1] });
+    el.style.marginLeft = '-60px';
+    SkCards.setFan(el, SkCards.fan(i, all.length, 14, 10));
+    dock.appendChild(el);
+  });
+});
+</script>
+</body>
+</html>

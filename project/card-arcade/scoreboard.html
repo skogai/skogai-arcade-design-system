@@ -1,0 +1,86 @@
+<!doctype html>
+<!-- @dsCard group="Card Arcade" name="Round Result" subtitle="Knock dialog: scores, melds, deadwood, hearts standings" viewport="1440x900" -->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Card Arcade — Round Result</title>
+<link rel="stylesheet" href="../styles.css" />
+<script src="cards.js" defer></script>
+</head>
+<body class="sk-table-page">
+<header data-sk-table-header data-mode="gin" data-status="North AI reveals its hand." data-score="YOU 040 · AI 014"></header>
+
+<div class="sk-dialog-scrim">
+  <section class="sk-dialog" role="dialog" aria-labelledby="result-title">
+    <div class="sk-dialog-head">
+      <div>
+        <span class="sk-card-eyebrow">ROUND 04 · RESULT</span>
+        <h1 id="result-title" class="sk-announce-title" style="text-align: left;">KNOCK! +13</h1>
+        <p class="sk-dialog-lede">You knocked on 1 deadwood. North AI was stuck with 14, so you take the difference.</p>
+      </div>
+      <a href="gin.html" class="sk-btn sk-btn-ghost sk-icon-btn" aria-label="Close">✕</a>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sk-space-12);">
+      <div class="sk-plaque sk-plaque-green"><span class="sk-plaque-label">YOU</span><span class="sk-plaque-value">040</span></div>
+      <div class="sk-plaque sk-plaque-violet"><span class="sk-plaque-label">NORTH AI</span><span class="sk-plaque-value">014</span></div>
+      <div class="sk-plaque sk-plaque-cyan"><span class="sk-plaque-label">TARGET</span><span class="sk-plaque-value">100</span></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: var(--sk-space-12);">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span class="sk-h4">YOUR MELDS</span>
+        <span class="sk-seat-count" style="color: var(--sk-fg-2);">deadwood 01</span>
+      </div>
+      <div style="overflow-x: auto;">
+        <div id="melds" style="display: flex; padding: 6px 6px 6px 46px; min-width: max-content;"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: var(--sk-space-12);">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span class="sk-h4">NORTH AI DEADWOOD</span>
+        <span class="sk-seat-count" style="color: var(--sk-neon-yellow);">deadwood 14</span>
+      </div>
+      <div style="display: flex; gap: var(--sk-space-8); flex-wrap: wrap;">
+        <div class="sk-playing-card sk-playing-card-sm" data-rank="K" data-suit="spades"></div>
+        <div class="sk-playing-card sk-playing-card-sm" data-rank="4" data-suit="hearts"></div>
+      </div>
+    </div>
+
+    <table class="sk-score-table">
+      <caption>HEARTS · LOWEST WINS</caption>
+      <thead><tr><th scope="col">SEAT</th><th scope="col">SCORE</th></tr></thead>
+      <tbody>
+        <tr><td>YOU · SOUTH</td><td style="color: var(--sk-neon-green);">004</td></tr>
+        <tr><td>WEST AI</td><td>007</td></tr>
+        <tr><td>NORTH AI</td><td>011</td></tr>
+        <tr><td>EAST AI</td><td>015</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sk-dialog-actions sk-dialog-actions-rule">
+      <a href="gin.html" class="sk-btn sk-btn-ghost">CLOSE</a>
+      <a href="gin.html" class="sk-btn sk-btn-primary">▶ DEAL NEXT</a>
+    </div>
+  </section>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var melds = document.getElementById('melds');
+  [
+    ['7', 'spades', 'set'], ['7', 'hearts', 'set'], ['7', 'clubs', 'set'],
+    ['4', 'diamonds', 'run'], ['5', 'diamonds', 'run'], ['6', 'diamonds', 'run'],
+    ['9', 'clubs', 'run'], ['10', 'clubs', 'run'], ['J', 'clubs', 'run'],
+    ['A', 'hearts', 'none']
+  ].forEach(function (c) {
+    var el = SkCards.makeCard({ rank: c[0], suit: c[1], glow: c[2], size: 'sm' });
+    el.style.marginLeft = '-40px';
+    melds.appendChild(el);
+  });
+});
+</script>
+</body>
+</html>
