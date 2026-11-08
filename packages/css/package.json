@@ -13,6 +13,7 @@
     "./base.css": "./dist/base.css",
     "./components.css": "./dist/components.css",
     "./terminal.css": "./dist/terminal.css",
+    "./cards.css": "./dist/cards.css",
     "./icons.svg": "./dist/icons.svg",
     "./fonts/*": "./dist/fonts/*"
   },

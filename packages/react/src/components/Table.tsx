@@ -2,6 +2,7 @@ import {
   Children,
   forwardRef,
   isValidElement,
+  useId,
   useState,
   type ButtonHTMLAttributes,
   type CSSProperties,
@@ -311,13 +312,15 @@ export const Dialog = forwardRef<HTMLElement, DialogProps>(function Dialog(
     onClose,
     closeHref,
     actions,
-    titleId = "sk-dialog-title",
+    titleId: titleIdProp,
     className,
     children,
     ...rest
   },
   ref,
 ) {
+  const generatedId = useId();
+  const titleId = titleIdProp ?? `sk-dialog-title-${generatedId}`;
   const closeProps = { className: "sk-btn sk-btn-ghost sk-icon-btn", "aria-label": "Close" };
   return (
     <div className="sk-dialog-scrim">
