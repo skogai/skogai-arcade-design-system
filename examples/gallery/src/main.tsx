@@ -13,7 +13,11 @@ import {
   CardTitle,
   Cursor,
   Dialogue,
+  Dialog,
+  Fan,
+  Felt,
   Frame,
+  HandCard,
   Hearts,
   Hud,
   HudAvatar,
@@ -24,10 +28,20 @@ import {
   HudStats,
   Icon,
   Meter,
+  Pile,
+  PileColumn,
   Plaque,
+  PlayingCard,
   Quest,
   QuestStrip,
+  ScoreTable,
+  Seat,
   Stat,
+  TableFooter,
+  TableFooterSep,
+  TableHeader,
+  TableMain,
+  TablePage,
   Terminal,
   TerminalComposer,
   TerminalLine,
@@ -36,10 +50,14 @@ import {
   TextField,
   cabinetIds,
   cabinets,
+  cardName,
   formatScore,
   formatTime,
   type CabinetId,
+  type CardGlow,
   type IconName,
+  type Rank,
+  type Suit,
 } from "@skogai/arcade-react";
 
 const scenes: Record<CabinetId, string> = {
@@ -200,6 +218,130 @@ function Kit() {
   );
 }
 
+
+type Meld = [Rank, Suit, CardGlow];
+const ginHand: Meld[] = [
+  ["7", "spades", "set"], ["7", "hearts", "set"], ["7", "clubs", "set"],
+  ["4", "diamonds", "run"], ["5", "diamonds", "run"], ["6", "diamonds", "run"],
+  ["9", "clubs", "run"], ["10", "clubs", "run"], ["J", "clubs", "run"],
+  ["A", "hearts", "none"],
+];
+const MELD_NOTE = { set: ", in a set", run: ", in a run", pass: "", dim: "", none: ", deadwood" };
+
+function GinTable() {
+  const [picked, setPicked] = useState<number | null>(null);
+  return (
+    <TablePage className="table-demo">
+      <TableHeader
+        mode="gin"
+        status="Your turn — draw from the stock or the discard pile."
+        score="YOU 027 · AI 014"
+      />
+      <TableMain>
+        <PileColumn aria-label="North AI" role="group">
+          <Seat
+            badge={<Badge tone="muted" icon="▢">WAITING</Badge>}
+            name="NORTH AI"
+            count="10 cards"
+          />
+          <Fan variant="ai">
+            {Array.from({ length: 10 }, (_, i) => (
+              <PlayingCard key={i} faceDown size="sm" />
+            ))}
+          </Fan>
+        </PileColumn>
+        <Felt
+          aria-label="Draw piles"
+          style={{
+            boxSizing: "border-box", width: "100%", maxWidth: 880, display: "flex", flexWrap: "wrap",
+            justifyContent: "center", alignItems: "center", gap: "24px 48px", padding: "32px 24px",
+          }}
+        >
+          <Pile aria-label="Draw from stock, 31 cards left" label="STOCK · 31">
+            {[10, 7, 4].map((top, i) => (
+              <PlayingCard key={top} faceDown style={{ left: 4 + i * 2, top }} />
+            ))}
+          </Pile>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+            <Plaque tone="green" label="SETS" value="01" style={{ minWidth: 104 }} />
+            <Plaque tone="cyan" label="RUNS" value="02" style={{ minWidth: 104 }} />
+            <div className="sk-plaque sk-plaque-yellow" style={{ minWidth: 104 }}>
+              <span className="sk-plaque-label">DEADWOOD</span>
+              <span className="sk-plaque-value">001</span>
+            </div>
+          </div>
+          <Pile aria-label="Take the 8 of hearts from the discard pile" label="DISCARD · DROP OR TAP">
+            <PlayingCard rank="3" suit="spades" style={{ left: 6, top: 7, transform: "rotate(-4deg)" }} />
+            <PlayingCard rank="8" suit="hearts" style={{ left: 8, top: 6, transform: "rotate(3deg)" }} />
+          </Pile>
+        </Felt>
+        <PileColumn aria-label="Your hand" role="group" style={{ width: "100%" }}>
+          <Fan>
+            {ginHand.map(([rank, suit, glow], i) => (
+              <HandCard
+                key={rank + suit}
+                aria-label={cardName(rank, suit) + MELD_NOTE[glow]}
+                aria-pressed={picked === i}
+                raised={picked === i}
+                onClick={() => setPicked(picked === i ? null : i)}
+              >
+                <PlayingCard rank={rank} suit={suit} glow={glow} />
+              </HandCard>
+            ))}
+          </Fan>
+          <div className="sk-legend">
+            <Badge tone="success" icon="▣">SET</Badge>
+            <Badge tone="cyan" icon="▣">RUN</Badge>
+            <span className="sk-hint">Drag to reorder · tap a card to discard</span>
+          </div>
+        </PileColumn>
+      </TableMain>
+      <TableFooter>
+        <Button variant="outline">SORT RANK</Button>
+        <Button variant="outline">SORT SUIT</Button>
+        <TableFooterSep />
+        <Button variant="primary">▶ KNOCK · 01</Button>
+        <Button variant="outline">NEW DEAL</Button>
+      </TableFooter>
+    </TablePage>
+  );
+}
+
+function RoundResult() {
+  return (
+    <TablePage className="table-demo">
+      <Dialog
+        eyebrow="ROUND 04 · RESULT"
+        title="KNOCK! +13"
+        titleVariant="announce"
+        lede="You knocked on 1 deadwood. North AI was stuck with 14, so you take the difference."
+        onClose={() => {}}
+        actions={
+          <>
+            <Button variant="ghost">CLOSE</Button>
+            <Button variant="primary">▶ DEAL NEXT</Button>
+          </>
+        }
+      >
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 12 }}>
+          <Plaque tone="green" label="YOU" value="040" />
+          <Plaque tone="violet" label="NORTH AI" value="014" />
+          <Plaque tone="cyan" label="TARGET" value="100" />
+        </div>
+        <ScoreTable
+          caption="HEARTS · LOWEST WINS"
+          rows={[
+            { seat: "YOU · SOUTH", score: "004", lead: true },
+            { seat: "WEST AI", score: "007" },
+            { seat: "NORTH AI", score: "011" },
+            { seat: "EAST AI", score: "015" },
+          ]}
+        />
+      </Dialog>
+    </TablePage>
+  );
+}
+
 function App() {
   const [active, setActive] = useState<CabinetId>("sudo-hero");
   return (
@@ -227,6 +369,11 @@ function App() {
       <Cabinet cabinet={active} surface className="cab">
         <Kit />
       </Cabinet>
+      <h2 className="sk-h3 section-h">CARD ARCADE · TABLES</h2>
+      <Cabinet cabinet="sudo-hero" className="tables">
+        <GinTable />
+        <RoundResult />
+      </Cabinet>
       <h2 className="sk-h3 section-h">HUD FRAME · ALL CABINETS</h2>
       <div className="huds">
         {cabinetIds.map((id) => (
@@ -252,6 +399,8 @@ style.textContent = `
   .cab { padding: 24px; border: 1px solid var(--sk-border); border-radius: var(--sk-radius-panel); }
   .grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 24px; }
   .grid .span { grid-column: 1 / -1; }
+  .tables { display: grid; gap: 24px; }
+  .table-demo { min-height: 0; border: 1px solid var(--sk-border); border-radius: var(--sk-radius-panel); overflow: hidden; }
   .huds { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .huds .sk-announce-title { font-size: var(--sk-text-20); }
   @media (max-width: 900px) { .grid, .huds { grid-template-columns: minmax(0, 1fr); } }
