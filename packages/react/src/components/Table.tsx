@@ -1,6 +1,7 @@
 import {
   Children,
   forwardRef,
+  isValidElement,
   useState,
   type ButtonHTMLAttributes,
   type CSSProperties,
@@ -46,7 +47,10 @@ export const Fan = forwardRef<HTMLDivElement, FanProps>(function Fan(
       {items.map((child, i) => {
         const { rot, dy } = fanPosition(i, items.length, s, l);
         return (
-          <div key={i} style={{ "--rot": rot, "--dy": dy, "--i": i } as CSSProperties}>
+          <div
+            key={isValidElement(child) && child.key != null ? child.key : i}
+            style={{ "--rot": rot, "--dy": dy, "--i": i } as CSSProperties}
+          >
             {child}
           </div>
         );
@@ -319,6 +323,7 @@ export const Dialog = forwardRef<HTMLElement, DialogProps>(function Dialog(
     <div className="sk-dialog-scrim">
       <section
         ref={ref}
+        role="dialog"
         aria-labelledby={titleId}
         className={cx("sk-dialog", wide && "sk-dialog-wide", className)}
         {...rest}

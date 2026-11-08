@@ -275,7 +275,7 @@ describe("Card Arcade", () => {
         <ScoreTable caption="HEARTS" rows={[{ seat: "YOU", score: "004", lead: true }]} />
       </Dialog>,
     );
-    expect(screen.getByRole("region", { name: "RULES" })).toBeTruthy();
+    expect(screen.getByRole("dialog", { name: "RULES" })).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
     expect(closed).toBe(true);
     expect(screen.getByRole("columnheader", { name: "SEAT" })).toBeTruthy();
