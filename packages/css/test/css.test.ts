@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { buildTokensCss } from "@skogai/arcade-tokens";
 
 const src = (f: string) => readFileSync(resolve(__dirname, "../src", f), "utf8");
-const layers = ["base.css", "components.css", "terminal.css"] as const;
+const layers = ["base.css", "components.css", "terminal.css", "cards.css"] as const;
 const stripComments = (css: string) => css.replace(/\/\*[\s\S]*?\*\//g, "");
 
 const defined = new Set(

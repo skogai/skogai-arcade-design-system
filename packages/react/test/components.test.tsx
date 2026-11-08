@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { createRef } from "react";
 import { describe, expect, it } from "vitest";
 import {
@@ -11,7 +11,15 @@ import {
   CardEyebrow,
   CardTitle,
   Cursor,
+  Dialog,
   Dialogue,
+  Fan,
+  HandCard,
+  PlayingCard,
+  ScoreTable,
+  TableHeader,
+  cardName,
+  fanPosition,
   Hearts,
   Icon,
   iconNames,
@@ -204,5 +212,73 @@ describe("format", () => {
     expect(formatTime(138)).toBe("02:18");
     expect(formatTime(5025)).toBe("01:23:45");
     expect(formatTime(5, { hours: true })).toBe("00:00:05");
+  });
+});
+
+describe("Card Arcade", () => {
+  it("PlayingCard renders a face with court label and meld glow", () => {
+    const { container } = render(<PlayingCard rank="K" suit="hearts" glow="set" size="sm" />);
+    const card = container.querySelector(".sk-playing-card.sk-playing-card-sm")!;
+    expect(card.getAttribute("data-suit")).toBe("hearts");
+    expect(card.getAttribute("data-glow")).toBe("set");
+    expect(card.querySelector(".sk-card-court-label")?.textContent).toBe("KING");
+    expect(card.querySelectorAll(".sk-card-rank")).toHaveLength(2);
+    expect(screen.getByRole("img", { name: "hearts" })).toBeTruthy();
+  });
+
+  it("PlayingCard draws a back when face down", () => {
+    const { container } = render(<PlayingCard faceDown />);
+    expect(container.querySelector("[data-face-down] .sk-card-back .sk-card-emblem")).toBeTruthy();
+    expect(container.querySelector(".sk-card-face")).toBeNull();
+  });
+
+  it("cardName and fanPosition follow the design's curve", () => {
+    expect(cardName("Q", "spades")).toBe("Queen of spades");
+    expect(cardName("7", "clubs")).toBe("7 of clubs");
+    expect(fanPosition(0, 10, 20, 18)).toEqual({ rot: -10, dy: 18 });
+    expect(fanPosition(0, 1, 20, 18)).toEqual({ rot: 0, dy: 0 });
+  });
+
+  it("Fan places each card along the curve", () => {
+    const { container } = render(
+      <Fan>
+        <HandCard aria-label="a">
+          <PlayingCard rank="2" suit="clubs" />
+        </HandCard>
+        <HandCard aria-label="b" raised onClick={() => {}}>
+          <PlayingCard rank="3" suit="clubs" />
+        </HandCard>
+      </Fan>,
+    );
+    const slots = container.querySelectorAll<HTMLElement>(".sk-hand > div");
+    expect(slots).toHaveLength(2);
+    expect(slots[0]!.style.getPropertyValue("--rot")).toBe("-10");
+    expect(slots[1]!.style.getPropertyValue("--rot")).toBe("10");
+    expect(screen.getByLabelText("b").className).toBe("sk-hand-card is-pickable is-raised");
+  });
+
+  it("TableHeader marks the current mode and toggles sound", () => {
+    render(<TableHeader mode="hearts" status="Follow suit." score="YOU 004 · N 011" />);
+    expect(screen.getByRole("link", { name: "HEARTS" }).getAttribute("aria-current")).toBe("page");
+    expect(screen.getByRole("link", { name: "GIN RUMMY" }).getAttribute("aria-current")).toBeNull();
+    const sound = screen.getByRole("button", { name: "Mute card sounds" });
+    fireEvent.click(sound);
+    expect(screen.getByRole("button", { name: "Unmute card sounds" }).getAttribute("aria-pressed")).toBe(
+      "false",
+    );
+  });
+
+  it("Dialog is labelled by its title and closes; ScoreTable lists seats", () => {
+    let closed = false;
+    render(
+      <Dialog title="RULES" onClose={() => (closed = true)} actions={<button>GOT IT</button>}>
+        <ScoreTable caption="HEARTS" rows={[{ seat: "YOU", score: "004", lead: true }]} />
+      </Dialog>,
+    );
+    expect(screen.getByRole("region", { name: "RULES" })).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    expect(closed).toBe(true);
+    expect(screen.getByRole("columnheader", { name: "SEAT" })).toBeTruthy();
+    expect(document.querySelector("td.is-lead")?.textContent).toBe("004");
   });
 });

@@ -63,5 +63,41 @@ export {
   type TerminalSegmentProps,
   type TerminalComposerProps,
 } from "./components/Terminal.js";
+export {
+  PlayingCard,
+  cardName,
+  suitGlyph,
+  fanPosition,
+  suits,
+  type PlayingCardProps,
+  type Suit,
+  type Rank,
+  type CardGlow,
+} from "./components/PlayingCard.js";
+export {
+  Fan,
+  HandCard,
+  Pile,
+  PileColumn,
+  Felt,
+  Seat,
+  TablePage,
+  TableMain,
+  TableFooter,
+  TableFooterSep,
+  TableHeader,
+  Dialog,
+  RuleList,
+  ScoreTable,
+  type FanProps,
+  type HandCardProps,
+  type PileProps,
+  type FeltProps,
+  type SeatProps,
+  type TableMode,
+  type TableHeaderProps,
+  type DialogProps,
+  type ScoreTableProps,
+} from "./components/Table.js";
 export { cx, formatScore, formatTime } from "./util.js";
 export { cabinets, cabinetIds, type CabinetId } from "@skogai/arcade-tokens";

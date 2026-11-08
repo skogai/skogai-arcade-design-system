@@ -195,6 +195,7 @@ export const insets = {
   violet: "inset 0 0 0 2px #4a3580, inset 0 0 12px rgba(178, 107, 255, 0.35)",
   cyan: "inset 0 0 0 2px #2a6f8a, inset 0 0 12px rgba(78, 226, 255, 0.35)",
   green: "inset 0 0 0 2px #1f5538, inset 0 0 12px rgba(95, 255, 138, 0.3)",
+  yellow: "inset 0 0 0 2px #6b5418, inset 0 0 12px rgba(255, 210, 63, 0.3)",
 } as const;
 
 /* ---- ANSI 16 (terminal) ------------------------------------------------ */

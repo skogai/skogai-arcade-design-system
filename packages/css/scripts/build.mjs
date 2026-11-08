@@ -12,7 +12,7 @@ const tokensCss = readFileSync(require.resolve("@skogai/arcade-tokens/tokens.css
 export const GOOGLE_FONTS =
   '@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Silkscreen:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap");\n';
 
-const parts = ["fonts.css", "base.css", "components.css", "terminal.css"];
+const parts = ["fonts.css", "base.css", "components.css", "terminal.css", "cards.css"];
 const read = (f) => readFileSync(resolve(root, "src", f), "utf8");
 
 rmSync(dist, { recursive: true, force: true });
